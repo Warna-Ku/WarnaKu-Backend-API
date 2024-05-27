@@ -104,7 +104,76 @@ Authenticate and sign in a user.
 
 ### GET /users
 
+This endpoint is used to retrieve a list of users.
+
+- Method: GET
+- Path: /users
+- Body Parameters: No parameters are required.
+
+#### Response
+
+- Success (HTTP 200):
+  - success (boolean): true
+  - msg (string): "Berhasil"
+- Error (HTTP 500):
+  - success (boolean): false
+  - log : Error getting articles
+  - msg (string): "Terjadi kesalahan, tunggu beberapa saat"
+
+#### Example JSON Data Response
+```json
+{
+    "success": true,
+    "msg": "Success",
+    "data": [
+        {
+            "id": "1",
+            "name": "Takahashi Ran",
+            "email": "takaran@example.com"
+        },
+        {
+            "id": "2",
+            "name": "Bruno Faran",
+            "email": "brunofaran@example.com"
+        }
+    ]
+}
+```
+
 ### GET /users/:uid
+
+- Method: GET
+- Path: /users/:uid
+- Route Parameters:
+  - uid (string): The User ID (UID) of the user to retrieve.
+
+- Example Request: GET /users/aghtJk918Yupio1
+
+#### Response
+
+- Success (HTTP 200):
+  - success (boolean): true
+  - msg (string): "Berhasil"
+  - data (object): Data user yang ditemukan
+- Not Found (HTTP 404):
+  - success (boolean): false
+  - msg (string): "User tidak ditemukan"
+- Error (HTTP 500):
+  - success (boolean): false
+  - msg (string): "Terjadi kesalahan, tunggu beberapa saat"
+
+#### Example JSON Data Response
+```json
+{
+    "success": true,
+    "msg": "Success",
+    "data": {
+        "id": "1",
+        "name": "Takahashi Ran",
+        "email": "takaran@example.com"
+    }
+}
+```
 
 ### PUT /users/:uid
 
