@@ -32,28 +32,27 @@ Please go to Google Cloud Console and create a service account with permissions 
 ## Recap Endpoint Routes
 | Route                           | HTTP Method | Description                                  |
 |---------------------------------|-------------|----------------------------------------------|
-| /users/signup                         | POST        | Sign up a new user                           |
-| /users/signin                         | POST        | Sign in a user                               |
-| /users/signout                        | POST        | Sign out a user                              |
-| /reset-password                 | POST        | Reset user's password                         |
-| /users                          | GET         | Get all users                                |
-| /users/:uid                     | GET         | Get current user by UID                              |
+| /users                         | POST        | Sign up a new user       ✅                    |
+| /users/login                         | POST        | Sign in a user                    ✅           |
+| /users/logout                        | POST        | Sign out a user                              |
+| /users                          | GET         | Get all users ✅                               |
+| /users/password                 | POST        | Reset user's password                         |
+| /users/:uid                     | GET         | Get specific user by UID       ✅                       | 
 | /users/:uid                     | PUT         | Update current user's personal data by UID
-| /upload-profile-picture         | POST        | Upload a profile picture for a user           |
-| /upload/:uid                    | PUT         | Upload a profile picture with UID             |
+| /users/:uid/profile-picture         | PUT        | Upload a profile picture for a user           |
 | /analysis                        | POST        | Perform a prediction using an uploaded image  |
 | /records                        | GET         | Get all Analysis Records articles                             |
 | /records/:uid                   | GET         | Get an Analysis Record by UID                         |
 
 ## Endpoints
 
-### POST /users/signup
+### POST /users
 
 Create a new user account.
 
 #### Request
 - Method: POST
-- Path: /users/signup
+- Path: /users
 - Body Parameters:
 ```json
   {
@@ -65,22 +64,33 @@ Create a new user account.
 ```
 #### Response
 
-- Success (HTTP 200):
-  - success (boolean): `true`
-  - msg (string): "Berhasil SignUp, silakan SignIn"
+Success (HTTP 200):
 
-- Failure (HTTP 400):
-  - success (boolean): `false`
-  - msg (string): "Email telah terdaftar"
+```json
+{
+    "status": "Success",
+    "msg": "User added Successfully, please login",
+    "uid": "User's unique ID"
+}
+```
 
-### POST /users/signin
 
-Authenticate and sign in a user.
+Failure (HTTP 400):
+```json
+{
+    "status": "Failure",
+    "msg": "Username's already registered"
+}
+```
+
+### POST /users/login
+
+Login and authenticate a user.
 
 #### Request
 
 - Method: POST
-- Path: /users/signin
+- Path: /users/login
 - Body Parameters:
 ```json
 {
@@ -91,16 +101,26 @@ Authenticate and sign in a user.
 
 #### Response
 
-- Success (HTTP 200):
-  - success (boolean): `true`
-  - msg (string): "Berhasil Sign In"
-  - data (object):
-    - uid (string): User's unique ID.
-    - email (string): User's email address.
+Success (HTTP 200):
+```json
+{
+    "status": "Success",
+    "msg": "Login successfully",
+    "data": {
+      "uid": "User's unique ID",
+      "email": "takaran@example.com",
+      "token": "Unique-token"
+    }
+}
+```
 
-- Failure (HTTP 404):
-  - success (boolean): `false`
-  - msg (string): "Error melakukan Sign In"
+Failure (HTTP 404):
+```json
+{
+    "status": "Failure",
+    "msg": "Username or password wrong"
+}
+```
 
 ### GET /users
 
@@ -112,31 +132,33 @@ This endpoint is used to retrieve a list of users.
 
 #### Response
 
-- Success (HTTP 200):
-  - success (boolean): true
-  - msg (string): "Berhasil"
-- Error (HTTP 500):
-  - success (boolean): false
-  - log : Error getting articles
-  - msg (string): "Terjadi kesalahan, tunggu beberapa saat"
-
-#### Example JSON Data Response
+Success (HTTP 200):
 ```json
 {
-    "success": true,
-    "msg": "Success",
+    "status": "Success",
+    "msg": "All data retrieved successfully",
     "data": [
         {
             "id": "1",
             "name": "Takahashi Ran",
-            "email": "takaran@example.com"
+            "email": "takaran@example.com",
+            "phone": "1234567890"
         },
         {
             "id": "2",
             "name": "Bruno Faran",
-            "email": "brunofaran@example.com"
+            "email": "brunofaran@example.com",
+            "phone": "345667890"
         }
     ]
+}
+```
+
+Error (HTTP 500):
+```json
+{
+    "status": "Failure",
+    "msg": "Error in retrieving users"
 }
 ```
 
@@ -147,33 +169,38 @@ This endpoint is used to retrieve a list of users.
 - Route Parameters:
   - uid (string): The User ID (UID) of the user to retrieve.
 
-- Example Request: GET /users/aghtJk918Yupio1
-
 #### Response
 
-- Success (HTTP 200):
-  - success (boolean): true
-  - msg (string): "Berhasil"
-  - data (object): Data user yang ditemukan
-- Not Found (HTTP 404):
-  - success (boolean): false
-  - msg (string): "User tidak ditemukan"
-- Error (HTTP 500):
-  - success (boolean): false
-  - msg (string): "Terjadi kesalahan, tunggu beberapa saat"
-
-#### Example JSON Data Response
+Success (HTTP 200):
 ```json
 {
-    "success": true,
-    "msg": "Success",
+    "status": "Success",
+    "msg": "User's data is found",
     "data": {
         "id": "1",
         "name": "Takahashi Ran",
-        "email": "takaran@example.com"
+        "email": "takaran@example.com",
+        "phone": "1234567890"
     }
 }
 ```
+
+Not Found (HTTP 404):
+```json
+{
+    "status": "Failure",
+    "msg": "User's data is not found"
+}
+```
+
+Error (HTTP 500):
+```json
+{
+    "status": "Failure",
+    "msg": "Error in retrieving users"
+}
+```
+
 
 ### PUT /users/:uid
 
