@@ -58,7 +58,6 @@ Create a new user account.
   {
     "name": "Takahashi Ran",
     "email": "takaran@example.com",
-    "phone": "1234567890",
     "password": "password123"
   }
 ```
