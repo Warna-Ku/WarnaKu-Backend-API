@@ -58,7 +58,6 @@ Create a new user account.
   {
     "name": "Takahashi Ran",
     "email": "takaran@example.com",
-    "phone": "1234567890",
     "password": "password123"
   }
 ```
@@ -177,7 +176,7 @@ Success (HTTP 200):
     "status": "Success",
     "msg": "User's data is found",
     "data": {
-        "id": "1",
+        "uid": "1",
         "name": "Takahashi Ran",
         "email": "takaran@example.com",
         "phone": "1234567890"
