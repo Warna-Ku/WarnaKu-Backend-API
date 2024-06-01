@@ -1,8 +1,12 @@
 import express from 'express';
+import { config } from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { userRouter } from './routes/public-api.js';
 import { web } from './application/web.js';
+
+// Load environment variables from .env file
+config();
 
 const app = express();
 const PORT = process.env.EXPRESS_PORT || 8080;
@@ -19,4 +23,6 @@ app.get('/', (req, res) => {
     res.status(200).send('<h1>Server is running...</h1>');
 });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`listening on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`listening on port ${PORT}`);
+});

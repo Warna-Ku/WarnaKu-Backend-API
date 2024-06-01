@@ -3,9 +3,6 @@ import { Storage } from '@google-cloud/storage';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 
-// Load environment variables
-config();
-
 // Initialize Google Cloud Storage
 const storageGCS = new Storage({
     projectId: process.env.GCS_PROJECT_ID,
