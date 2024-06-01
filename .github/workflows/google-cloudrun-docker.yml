@@ -89,8 +89,8 @@ jobs:
           echo "GCS_BUCKET_NAME=${{ secrets.GCS_BUCKET_NAME }}" > .env
           echo "GCS_CLIENT_EMAIL=${{ secrets.GCS_CLIENT_EMAIL }}" > .env
           echo "GCS_PRIVATE_KEY=${{ secrets.GCS_PRIVATE_KEY }}" > .env
-          echo "GCS_PROJECT_ID=${{ GCS_PROJECT_ID }}" > .env
-          echo "SECRET_KEY=${{ SECRET_KEY }}" > .env
+          echo "GCS_PROJECT_ID=${{ secrets.GCS_PROJECT_ID }}" > .env
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env
           
       - name: Clear Docker cache
         run: docker builder prune -f
