@@ -31,7 +31,7 @@ const getById = async (req, res, next) => {
 
         res.status(200).json({
             status: "Success",
-            msg: "User's data is found",
+            msg: "All data retrieved successfully",
             data: result
         });
     } catch (e) {
@@ -39,8 +39,23 @@ const getById = async (req, res, next) => {
     }
 };
 
+const getAll = async (req, res, next) => {
+    try {
+        const users = await userService.getAllUser();
+
+        res.status(200).json({
+            status: "Success",
+            msg: "All user's data are found",
+            data: users
+        })
+    } catch (e) {
+        next(e);
+    }
+}
+
 export default {
     register,
     login,
+    getAll,
     getById
 }

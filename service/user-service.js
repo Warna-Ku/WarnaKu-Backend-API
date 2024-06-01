@@ -108,6 +108,18 @@ const login = async (req) => {
     };
 };
 
+const getAllUser = async () => {
+    const users = await prismaClient.user.findMany({
+        select: {
+            uid: true,
+            email: true,
+            name: true
+        }
+    });
+    
+    return users;
+}
+
 const getCertainUser = async (uid) => {
     // No need to validate uid again here; it's assumed valid from the controller
     // validUid = validate(getUserValidation, { uid });
@@ -134,5 +146,6 @@ const getCertainUser = async (uid) => {
 export default {
     register,
     login,
+    getAllUser,
     getCertainUser
 }
