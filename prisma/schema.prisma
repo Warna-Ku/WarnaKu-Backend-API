@@ -20,6 +20,42 @@ model User {
   name     String  @db.VarChar(100)
   token    String? @db.VarChar(100) //Nullable token field
 
+  // One-to-many relation with colorAnalysisReport as worker`
+  colorAnalysesWorker colorAnalysisReport[] @relation("WorkerColorAnalyses")
+
+  // One-to-many relation with Customer
+
   @@map("users")
 }
 
+model Customer {
+  customerID   Int    @id @default(autoincrement())
+  fullname     String
+  phone        String
+  address      String
+  faceImageURL String
+
+  // One-to-many relation with colorAnalysisReport as customer
+  colorAnalyses colorAnalysisReport[]
+
+  @@map("customers")
+}
+
+model colorAnalysisReport {
+  analysisID        Int      @id @default(autoincrement())
+  createdAt         DateTime
+  season            String
+  colorPaletteImage String
+  colorHex          String
+  explanation       String
+
+  // Define foreign keys for relations
+  customerID Int
+  workerID   String // Assuming WorkerID is of type String
+
+  // Define relations
+  customer Customer @relation(fields: [customerID], references: [customerID])
+  worker   User     @relation(fields: [workerID], references: [uid], name: "WorkerColorAnalyses")
+
+  @@map("color_analysis_reports")
+}

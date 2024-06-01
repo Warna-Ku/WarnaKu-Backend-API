@@ -9,6 +9,7 @@ const userRouter = express.Router();
 
 userRouter.post('/api/users', multer.single('profile_photo_url'), imgUpload.storeToGCS, userController.register);
 userRouter.post('/api/users/login', userController.login);
+userRouter.get('/api/users', userController.getAll);
 
 //User API
 userRouter.get('/api/users/:uid', authorize, userController.getById);

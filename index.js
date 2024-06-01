@@ -5,7 +5,7 @@ import { userRouter } from './routes/public-api.js';
 import { web } from './application/web.js';
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.EXPRESS_PORT || 8080;
 
 app.use(express.json());
 app.use(cors());
@@ -16,7 +16,7 @@ app.use(userRouter);
 app.use(web); // Assuming web is a middleware or router from ./application/web.js
 
 app.get('/', (req, res) => {
-    res.send('<h1>Server is running...</h1>');
+    res.status(200).send('<h1>Server is running...</h1>');
 });
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
