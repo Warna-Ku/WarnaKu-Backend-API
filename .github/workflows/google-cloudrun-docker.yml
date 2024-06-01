@@ -50,7 +50,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }} # TODO: update Google Cloud project id
-  GAR_LOCATION: asia-southeast2 # TODO: update Artifact Registry location
+  GAR_LOCATION: ${{ secrets.GAR_LOCATION }} # TODO: update Artifact Registry location
   GAR_REPOSITORY_NAME: ${{ secrets.GAR_REPOSITORY_NAME }} # TODO: update Artifact Registry Repository name 
   SERVICE: ${{ secrets.SERVICE_NAME }} # TODO: update Cloud Run service name
   REGION: ${{ secrets.REGION }} # TODO: update Cloud Run service region
@@ -85,13 +85,13 @@ jobs:
       - name: Set Environtment Variables
         id: env-vars
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
           echo "EXPRESS_PORT=${{ secrets.EXPRESS_PORT }}" >> .env
-          echo "GCS_BUCKET_NAME=${{ secrets.GCS_BUCKET_NAME }}" > .env
-          echo "GCS_CLIENT_EMAIL=${{ secrets.GCS_CLIENT_EMAIL }}" > .env
-          echo "GCS_PRIVATE_KEY=${{ secrets.GCS_PRIVATE_KEY }}" > .env
-          echo "GCS_PROJECT_ID=${{ secrets.GCS_PROJECT_ID }}" > .env
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" > .env
+          echo "GCS_BUCKET_NAME=${{ secrets.GCS_BUCKET_NAME }}" >> .env
+          echo "GCS_CLIENT_EMAIL=${{ secrets.GCS_CLIENT_EMAIL }}" >> .env
+          echo "GCS_PRIVATE_KEY=${{ secrets.GCS_PRIVATE_KEY }}" | sed 's/\\n/\n/g' >> .env
+          echo "GCS_PROJECT_ID=${{ secrets.GCS_PROJECT_ID }}" >> .env
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
           
       - name: Clear Docker cache
         run: docker builder prune -f
