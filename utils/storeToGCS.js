@@ -3,12 +3,18 @@ import { Storage } from '@google-cloud/storage';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 
+const privateKey = process.env.GCS_PRIVATE_KEY;
+
+if (!privateKey) {
+    throw new Error('GCS_PRIVATE_KEY is not defined in environment variables');
+}
+
 // Initialize Google Cloud Storage
 const storageGCS = new Storage({
     projectId: process.env.GCS_PROJECT_ID,
     credentials: {
         client_email: process.env.GCS_CLIENT_EMAIL,
-        private_key: process.env.GCS_PRIVATE_KEY.replace(/\\n/g, '\n')
+        private_key: privateKey.replace(/\\n/g, '\n')
     }
 });
 

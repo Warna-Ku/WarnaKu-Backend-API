@@ -1,12 +1,14 @@
-import express from 'express';
 import { config } from 'dotenv';
+// Load environment variables from .env file
+config();
+
+import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { userRouter } from './routes/public-api.js';
 import { web } from './application/web.js';
 
-// Load environment variables from .env file
-config();
+
 
 const app = express();
 const PORT = process.env.EXPRESS_PORT || 8080;
