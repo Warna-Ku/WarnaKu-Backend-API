@@ -23,6 +23,8 @@ model User {
   // One-to-many relation with colorAnalysisReport as worker`
   colorAnalysesWorker colorAnalysisReport[] @relation("WorkerColorAnalyses")
 
+  // One-to-many relation with Customer
+
   @@map("users")
 }
 
