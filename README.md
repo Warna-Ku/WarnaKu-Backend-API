@@ -135,7 +135,7 @@ Success (HTTP 200):
 ```json
 {
     "status": "Success",
-    "msg": "All data retrieved successfully",
+    "msg": "All data is retrieved successfully",
     "data": [
         {
             "id": "1",
