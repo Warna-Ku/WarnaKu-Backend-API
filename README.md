@@ -117,7 +117,7 @@ Failure (HTTP 404):
 ```json
 {
     "status": "Failure",
-    "msg": "Username or password wrong"
+    "msg": "username or password wrong"
 }
 ```
 
