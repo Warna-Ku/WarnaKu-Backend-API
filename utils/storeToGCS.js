@@ -6,13 +6,14 @@ import path from 'path';
 // Load environment variables
 config();
 
+const base64EncodedServiceAccount = process.env.BASE64_ENCODED_SERVICE_ACCOUNT;
+const decodedServiceAccount = Buffer.from(base64EncodedServiceAccount, 'base64').toString('utf-8');
+const credentials = JSON.parse(decodedServiceAccount);
+
 // Initialize Google Cloud Storage
 const storageGCS = new Storage({
-    projectId: process.env.GCS_PROJECT_ID,
-    credentials: {
-        client_email: process.env.GCS_CLIENT_EMAIL,
-        private_key: process.env.GCS_PRIVATE_KEY.replace(/\\n/g, '\n')
-    }
+    // projectId: process.env.GCS_PROJECT_ID,
+    credentials
 });
 
 const nameBucket = process.env.GCS_BUCKET_NAME;
