@@ -18,7 +18,7 @@ model User {
   email    String  @unique @db.VarChar(100)
   password String  @db.VarChar(100)
   name     String  @db.VarChar(100)
-  token    String? @db.VarChar(255) //Nullable token field
+  token    String? @db.VarChar(512) //Nullable token field
 
   // One-to-many relation with colorAnalysisReport as worker`
   colorAnalysesWorker colorAnalysisReport[] @relation("WorkerColorAnalyses")
