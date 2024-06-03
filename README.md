@@ -78,7 +78,7 @@ Failure (HTTP 400):
 ```json
 {
     "status": "Failure",
-    "msg": "Username's already registered"
+    "msg": "Username is already registered"
 }
 ```
 
