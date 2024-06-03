@@ -19,4 +19,6 @@ app.get('/', (req, res) => {
     res.send('<h1>Server is running...</h1>');
 });
 
-app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => 
+    console.log(`listening on port ${PORT}`)
+);
