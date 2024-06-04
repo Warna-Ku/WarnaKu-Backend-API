@@ -34,7 +34,7 @@ Please go to Google Cloud Console and create a service account with permissions 
 |---------------------------------|-------------|----------------------------------------------|
 | /users                         | POST        | Sign up a new user       ✅                    |
 | /users/login                         | POST        | Sign in a user                    ✅           |
-| /users/logout                        | POST        | Sign out a user                              |
+| /users/logout                        | DELETE        | Sign out a user                              |
 | /users                          | GET         | Get all users ✅                               |
 | /users/password                 | POST        | Reset user's password                         |
 | /users/:uid                     | GET         | Get specific user by UID       ✅                       | 
@@ -120,6 +120,23 @@ Failure (HTTP 404):
     "msg": "username or password wrong"
 }
 ```
+
+### DELETE /users/logout
+
+Logout the currently authenticated user.
+
+#### Request
+
+- Method: POST
+- Path: /Signout
+
+#### Response
+
+- Success (HTTP 200):
+  - msg (string): "Logout Successfully"
+
+- Failure (HTTP 404):
+  - msg (string): "User is not found. User can't log out"
 
 ### GET /users
 

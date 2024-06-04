@@ -108,6 +108,32 @@ const login = async (req) => {
     };
 };
 
+const logout = async (req) => {
+    logoutRequest = validate(getUserValidation, req);
+
+    const user = await prismaClient.user.findUnique({
+        where: {
+            uid: logoutRequest.uid
+        }
+    });
+
+    if (!user) {
+        throw new ResponseError(404, "User is not found. User can't log out")
+    }
+
+    return prismaClient.user.update({
+        where: {
+            uid: user.uid
+        },
+        data: {
+            token: null
+        },
+        select: {
+            uid: true
+        }
+    });
+}
+
 const getAllUser = async () => {
     const users = await prismaClient.user.findMany({
         select: {
@@ -146,6 +172,7 @@ const getCertainUser = async (uid) => {
 export default {
     register,
     login,
+    logout,
     getAllUser,
     getCertainUser
 }

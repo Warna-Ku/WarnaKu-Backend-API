@@ -24,6 +24,18 @@ const login = async (req, res, next) => {
     }
 }
 
+const logout = async (req, res, next) => {
+    try {
+        await userService.logout(req.body);
+        res.status(200).json({
+            status: "Success",
+            msg: "Logout successfully"
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 const getById = async (req, res, next) => {
     try {
         const { uid } = req.params; // Extract/ Destructure uid from req.params
@@ -56,6 +68,7 @@ const getAll = async (req, res, next) => {
 export default {
     register,
     login,
+    logout,
     getAll,
     getById
 }
