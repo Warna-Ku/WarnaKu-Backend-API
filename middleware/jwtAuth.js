@@ -4,21 +4,15 @@ import jwt from 'jsonwebtoken';
 const authorize = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
-    console.log(authHeader);
-
     if (!authHeader) {
         return res.status(401).json({ status: 'Error', message: 'Token not provided' });
     }
 
-    const token = authHeader.split(' ')[1]; //extract Bearer token
-
-    console.log('Token: ', token);
+    const token = authHeader.split(' ')[1]; // Extract Bearer token
 
     try {
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
         const userId = decodedToken.uid; // Assuming your JWT payload contains a 'uid' field
-
-        console.log(decodedToken);
 
         const existingUser = await prismaClient.user.findUnique({
             where: {

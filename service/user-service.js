@@ -109,11 +109,11 @@ const login = async (req) => {
 };
 
 const logout = async (req) => {
-    logoutRequest = validate(getUserValidation, req);
+    const userId = req.userId;
 
     const user = await prismaClient.user.findUnique({
         where: {
-            uid: logoutRequest.uid
+            uid: userId
         }
     });
 
