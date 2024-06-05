@@ -76,7 +76,7 @@ const update = async (request) => {
 const getAllCustomer = async () => {
     const customers = await prismaClient.customer.findMany({
         select: {
-            fullname,
+            fullname: true,
             phone: true,
             address: true,
             faceImageURL: true
