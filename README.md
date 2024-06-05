@@ -34,11 +34,11 @@ Please go to Google Cloud Console and create a service account with permissions 
 |---------------------------------|-------------|----------------------------------------------|
 | /users                         | POST        | Sign up a new user       ✅                    |
 | /users/login                         | POST        | Sign in a user                    ✅           |
-| /users/logout  ✅                      | DELETE        | Sign out a user                              |
+| /users/update                         | PATCH        | Update current user by UID                    ✅           |
+| /users/logout                        | DELETE        | Sign out a user                ✅              |
 | /users                          | GET         | Get all users ✅                               |
 | /users/password                 | POST        | Reset user's password                         |
 | /users/:uid                     | GET         | Get specific user by UID       ✅                       | 
-| /users/:uid                     | PUT         | Update current user's personal data by UID
 | /users/:uid/profile-picture         | PUT        | Upload a profile picture for a user           |
 | /analysis                        | POST        | Perform a prediction using an uploaded image  |
 | /records                        | GET         | Get all Analysis Records articles                             |
@@ -77,7 +77,7 @@ Success (HTTP 200):
 Failure (HTTP 400):
 ```json
 {
-    "status": "Failure",
+    "status": "Fail",
     "msg": "Username is already registered"
 }
 ```
@@ -116,8 +116,45 @@ Success (HTTP 200):
 Failure (HTTP 404):
 ```json
 {
-    "status": "Failure",
+    "status": "Fail",
     "msg": "username or password wrong"
+}
+```
+
+### PATCH /users/update
+
+Update the current authenticated user's data
+
+#### Request
+
+- Method: PATCH
+- Path: /users/update
+- Body Parameters:
+```json
+{
+  "uid": "2320bd80-d825-5123-8913-03a98bab382d"
+}
+```
+
+#### Response
+
+Success (HTTP 200):
+```json
+{
+    "status": "Success",
+    "msg": "Update successfully",
+    "data": {
+      "email": "User's updated email",
+      "nama": "User's updated name",
+    }
+}
+```
+
+Failure (HTTP 404):
+```json
+{
+    "status": "Fail",
+    "msg": "User is not found"
 }
 ```
 
@@ -133,10 +170,20 @@ Logout the currently authenticated user.
 #### Response
 
 - Success (HTTP 200):
-  - msg (string): "Logout Successfully"
+```json
+{
+    "status": "Success",
+    "msg": "Logout Successfully"
+}
+```
 
 - Failure (HTTP 404):
-  - msg (string): "User is not found. User can't log out"
+```json
+{
+    "status": "Fail",
+    "msg": "User is not found. User can't log out"
+}
+```
 
 ### GET /users
 
