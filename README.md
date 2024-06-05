@@ -34,7 +34,7 @@ Please go to Google Cloud Console and create a service account with permissions 
 |---------------------------------|-------------|----------------------------------------------|
 | /users                         | POST        | Sign up a new user       ✅                    |
 | /users/login                         | POST        | Sign in a user                    ✅           |
-| /users/logout                        | DELETE        | Sign out a user                              |
+| /users/logout  ✅                      | DELETE        | Sign out a user                              |
 | /users                          | GET         | Get all users ✅                               |
 | /users/password                 | POST        | Reset user's password                         |
 | /users/:uid                     | GET         | Get specific user by UID       ✅                       | 

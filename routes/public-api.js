@@ -1,6 +1,6 @@
-//Route for user who hasn't authenticated yet
 import express from "express";
 import userController from "../controller/user-controller.js";
+import customerController from "../controller/customer-controller.js";
 import authorize from "../middleware/jwtAuth.js";
 import imgUpload from "../utils/storeToGCS.js";
 import multer from "../middleware/multer.js";
@@ -13,7 +13,15 @@ userRouter.get('/users', userController.getAll);
 
 //User API
 userRouter.get('/users/:uid', authorize, userController.getById);
-userRouter.delete('/users/logout', authorize, userController.logout)
+userRouter.patch('/users/update', authorize, userController.update);
+userRouter.delete('/users/logout', authorize, userController.logout);
+
+//Customer API
+userRouter.post('/customers', authorize, customerController.register);
+userRouter.patch('/customers/update', authorize, customerController.update);
+userRouter.get('/customers', authorize, customerController.getAll);
+userRouter.get('customers/:customerID', authorize, customerController.getById);
+
 
 export {
     userRouter

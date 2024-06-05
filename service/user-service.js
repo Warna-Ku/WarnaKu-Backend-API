@@ -108,6 +108,46 @@ const login = async (req) => {
     };
 };
 
+const update = async (request) => {
+    const updateRequestUser = validate(updateUserValidation, request);
+
+    const userInDatabase = await prismaClient.user.count({
+        where: {
+            uid: updateRequestUser.uid
+        }
+    });
+
+    //If user's not found
+    if (userInDatabase !== 1) {
+        throw new ResponseError(404, "User is not found");
+    }
+
+    const data = {};
+    //If the user has uid properties then update
+    if (updateRequestUser.email) {
+        data.email = updateRequestUser.email;
+    }
+
+    if (updateRequestUser.password) {
+        data.password = await bcrypt.hash(updateRequestUser.password, 10);
+    }
+
+    if (updateRequestUser.name) {
+        data.name = updateRequestUser.name;
+    }
+
+    return prismaClient.user.update({
+        where: {
+            uid: updateRequestUser.uid
+        },
+        data: data,
+        select: {
+            email: true,
+            name: true
+        }
+    });
+};
+
 const logout = async (req) => {
     const userId = req.userId;
 
@@ -172,6 +212,7 @@ const getCertainUser = async (uid) => {
 export default {
     register,
     login,
+    update,
     logout,
     getAllUser,
     getCertainUser

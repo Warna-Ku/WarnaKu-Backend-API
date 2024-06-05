@@ -14,11 +14,12 @@ datasource db {
 }
 
 model User {
-  uid      String  @id @default(uuid()) @db.VarChar(36)
-  email    String  @unique @db.VarChar(100)
-  password String  @db.VarChar(100)
-  name     String  @db.VarChar(100)
-  token    String? @db.VarChar(512) //Nullable token field
+  uid          String  @id @default(uuid()) @db.VarChar(36)
+  email        String  @unique @db.VarChar(100)
+  password     String  @db.VarChar(100)
+  name         String  @db.VarChar(100)
+  token        String? @db.VarChar(512) //Nullable token field
+  faceImageURL String?
 
   // One-to-many relation with colorAnalysisReport as worker`
   colorAnalysesWorker colorAnalysisReport[] @relation("WorkerColorAnalyses")
@@ -29,11 +30,12 @@ model User {
 }
 
 model Customer {
-  customerID   Int    @id @default(autoincrement())
-  fullname     String
+  customerID   Int     @id @default(autoincrement())
+  fullname     String  @unique
   phone        String
   address      String
-  faceImageURL String
+  faceImageURL String?
+  //Adding FK that refer to colorAnalysis
 
   // One-to-many relation with colorAnalysisReport as customer
   colorAnalyses colorAnalysisReport[]
