@@ -10,7 +10,7 @@
 This document provides information on how to use the API endpoints and their functionalities.
 
 # Setup Project
-To run this project, Install it locally using npm on your pc
+To run this project, install it locally using npm on your pc
 ```
 # clone repository
 $ git clone https://github.com/Warna-Ku/WarnaKu-Backend-API.git
