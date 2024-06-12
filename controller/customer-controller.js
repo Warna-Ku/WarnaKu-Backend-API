@@ -55,9 +55,24 @@ const getById = async (req, res, next) => {
     }
 }
 
+const analyzeImage = async (req, res, next) => {
+    try {
+        const result = await customerService.analyzeImage(req.file);
+
+        res.status(200).json({
+            status: "Success",
+            msg: "Image analyzed successfully",
+            data: result
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 export default {
     register,
     update,
     getAll,
-    getById
+    getById,
+    analyzeImage
 }

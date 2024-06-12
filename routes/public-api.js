@@ -11,6 +11,9 @@ userRouter.post('/users', multer.single('profile_photo_url'), imgUpload.storeToG
 userRouter.post('/users/login', userController.login);
 userRouter.get('/users', userController.getAll);
 
+//Prediction API
+userRouter.post('/image-analyze', multer.single('image'), customerController.analyzeImage);
+
 //User API
 userRouter.get('/users/:uid', authorize, userController.getById);
 userRouter.patch('/users/update', authorize, userController.update);

@@ -1,3 +1,5 @@
+import axios from 'axios';
+import FormData from 'form-data';
 import { validate } from "../validation/validation.js";
 import { registerCustomerValidation, getCustomerValidation, updateCustomerValidation } from "../validation/customer-validation.js";
 import { prismaClient } from "../application/database.js";
@@ -106,9 +108,27 @@ const getCertainCustomer = async (customerID) => {
     return customer;
 }
 
+const analyzeImage = async (file) => {
+    try {
+        const form = new FormData();
+        form.append('image', file.buffer, file.originalname);
+
+        const response = await axios.post(process.env.FLASK_API_URL, form, {
+            headers: {
+                ...form.getHeaders()
+            }
+        });
+
+        return response.data;
+    } catch (e) {
+        throw new Error(e.message);
+    }
+}
+
 export default {
     register,
     update,
     getAllCustomer,
-    getCertainCustomer
+    getCertainCustomer,
+    analyzeImage
 }
