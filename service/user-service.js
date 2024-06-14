@@ -44,6 +44,7 @@ const login = async (req) => {
         select: {
             uid: true,
             email: true,
+            name: true,
             password: true
         }
     });
@@ -60,6 +61,7 @@ const login = async (req) => {
 
     const payload = {
         uid: user.uid,
+        name: user.name,
         email: user.email
     };
 
@@ -103,7 +105,7 @@ const login = async (req) => {
 
     return {
         uid: user.uid,
-        email: user.email,
+        name: user.name,
         token: token
     };
 };

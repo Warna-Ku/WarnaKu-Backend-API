@@ -5,7 +5,7 @@ const register = async (req, res, next) => {
         const result = await userService.register(req.body);
         res.status(200).json({
             status: "Success",
-            msg: "User added Successfully, please login",
+            message: "User added Successfully, please login",
             data: result
         });
     } catch (e) {
@@ -18,8 +18,8 @@ const login = async (req, res, next) => {
         const result = await userService.login(req.body);
         res.status(200).json({
             status: "Success",
-            msg: "Login successfully",
-            data: result
+            message: "Login successfully",
+            loginResult: result
         });
     } catch (e) {
         next(e);
@@ -31,7 +31,7 @@ const update = async (req, res, next) => {
         const result = await userService.update(req.body);
         res.status(200).json({
             status: "Success",
-            msg: "Update successfully",
+            message: "Update successfully",
             data: result
         });
     } catch (e) {
@@ -44,7 +44,7 @@ const logout = async (req, res, next) => {
         await userService.logout(req);
         res.status(200).json({
             status: "Success",
-            msg: "Logout successfully"
+            message: "Logout successfully"
         });
     } catch (e) {
         next(e);
@@ -58,7 +58,7 @@ const getById = async (req, res, next) => {
 
         res.status(200).json({
             status: "Success",
-            msg: "The user's data retrieved successfully",
+            message: "The user's data retrieved successfully",
             data: result
         });
     } catch (e) {
@@ -72,7 +72,7 @@ const getAll = async (req, res, next) => {
 
         res.status(200).json({
             status: "Success",
-            msg: "All user's data is found",
+            message: "All user's data is found",
             data: users
         })
     } catch (e) {
