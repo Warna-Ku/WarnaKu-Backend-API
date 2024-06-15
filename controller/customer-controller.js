@@ -4,7 +4,7 @@ const register = async (req, res, next) => {
     try {
         const result = await customerService.register(req.body);
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "Customer created successfully",
             data: result
         });
@@ -17,7 +17,7 @@ const update = async (req, res, next) => {
     try {
         const result = await customerService.update(req.body);
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "Update successfully",
             updateResult: result
         });
@@ -31,7 +31,7 @@ const getAll = async (req, res, next) => {
         const customers = await customerService.getAllCustomer();
 
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "All Customer's data is found",
             listCustomer: customers
         })
@@ -46,7 +46,7 @@ const getById = async (req, res, next) => {
         const result = await customerService.getCertainCustomer(customerID);
 
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "The customer's data retrieved successfully",
             customer: result
         });
@@ -60,7 +60,7 @@ const analyzeImage = async (req, res, next) => {
         const result = await customerService.analyzeImage(req.file);
 
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "Image analyzed successfully",
             data: result
         });

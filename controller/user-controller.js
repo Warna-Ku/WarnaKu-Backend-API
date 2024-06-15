@@ -4,7 +4,7 @@ const register = async (req, res, next) => {
     try {
         const result = await userService.register(req.body);
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "User created successfully",
             data: result
         });
@@ -17,7 +17,7 @@ const login = async (req, res, next) => {
     try {
         const result = await userService.login(req.body);
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "Login successfully",
             loginResult: result
         });
@@ -30,7 +30,7 @@ const update = async (req, res, next) => {
     try {
         const result = await userService.update(req.body);
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "Update successfully",
             updateResult: result
         });
@@ -43,7 +43,7 @@ const logout = async (req, res, next) => {
     try {
         await userService.logout(req);
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "Logout successfully"
         });
     } catch (e) {
@@ -57,7 +57,7 @@ const getById = async (req, res, next) => {
         const result = await userService.getCertainUser(uid); // Pass the uid to the service function
 
         res.status(200).json({
-            error: "False",
+            error: false,
             message: "The user's data retrieved successfully",
             user: result
         });
