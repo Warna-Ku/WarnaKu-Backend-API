@@ -34,6 +34,7 @@ model Customer {
   fullname     String  @unique
   phone        String
   address      String
+  email        String
   faceImageURL String?
   //Adding FK that refer to colorAnalysis
 
@@ -43,21 +44,44 @@ model Customer {
   @@map("customers")
 }
 
-model colorAnalysisReport {
-  analysisID        Int      @id @default(autoincrement())
-  createdAt         DateTime
-  season            String
-  colorPaletteImage String
-  colorHex          String
-  explanation       String
+model Color {
+  colorID     Int     @id @default(autoincrement())
+  name        String
+  code        String
+  description String
+  imageURL    String
+  paletteID   Int
+  palette     Palette @relation(fields: [paletteID], references: [paletteID])
 
-  // Define foreign keys for relations
+  @@map("colors")
+}
+
+model Palette {
+  paletteID   Int     @id @default(autoincrement())
+  season      String  @unique
+  description String  @db.LongText
+  imageURL    String
+  colors      Color[]
+
+  // Define the relation to colorAnalysisReport
+  colorAnalyses colorAnalysisReport[]
+
+  @@map("palettes")
+}
+
+model colorAnalysisReport {
+  analysisID Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  season     String
+  paletteID  Int
   customerID Int
-  workerID   String // Assuming WorkerID is of type String
+  workerID   String
 
   // Define relations
   customer Customer @relation(fields: [customerID], references: [customerID])
-  worker   User     @relation(fields: [workerID], references: [uid], name: "WorkerColorAnalyses")
+  worker   User     @relation("WorkerColorAnalyses", fields: [workerID], references: [uid])
+  palette  Palette  @relation(fields: [paletteID], references: [paletteID])
 
+  // Ensure that workerID matches the logged-in user's uid
   @@map("color_analysis_reports")
 }

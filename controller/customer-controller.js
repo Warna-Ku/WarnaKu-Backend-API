@@ -57,7 +57,10 @@ const getById = async (req, res, next) => {
 
 const analyzeImage = async (req, res, next) => {
     try {
-        const result = await customerService.analyzeImage(req.file);
+        const { customerID } = req.body;
+        const { workerID } = req.body;
+
+        const result = await customerService.analyzeImage(req.file, customerID, workerID);
 
         res.status(200).json({
             error: false,

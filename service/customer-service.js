@@ -48,18 +48,9 @@ const update = async (request) => {
     }
 
     const data = {};
-
-    if (updateRequestCustomer.fullname) {
-        data.fullname = updateRequestCustomer.fullname;
-    }
-
-    if (updateRequestCustomer.phone) {
-        data.phone = updateRequestCustomer.phone;
-    }
-
-    if (updateRequestCustomer.adress) {
-        data.adress = updateRequestCustomer.address;
-    }
+    if (updateRequestCustomer.fullname) data.fullname = updateRequestCustomer.fullname;
+    if (updateRequestCustomer.phone) data.phone = updateRequestCustomer.phone;
+    if (updateRequestCustomer.address) data.address = updateRequestCustomer.address;
 
     return prismaClient.customer.update({
         where: {
@@ -108,7 +99,7 @@ const getCertainCustomer = async (customerID) => {
     return customer;
 }
 
-const analyzeImage = async (file) => {
+const analyzeImage = async (file, customerID, workerID) => {
     try {
         const form = new FormData();
         form.append('image', file.buffer, file.originalname);
@@ -119,7 +110,35 @@ const analyzeImage = async (file) => {
             }
         });
 
-        return response.data;
+        // return response.data;
+
+        //Extract necessary data from the response
+        const { user_palette } = response.data;
+
+        //Save color analysis report into database
+        const analysisReport = await prismaClient.colorAnalysisReport.create({
+            data: {
+                createdAt: new Date(),
+                season: user_palette,
+                palette: {
+                    connect: {
+                        season: user_palette
+                    }
+                },
+                customer: {
+                    connect: {
+                        customerID: customerID
+                    }
+                },
+                worker: {
+                    connect: {
+                        uid: workerID
+                    }
+                }
+            }
+        });
+
+        return analysisReport;
     } catch (e) {
         throw new Error(e.message);
     }
