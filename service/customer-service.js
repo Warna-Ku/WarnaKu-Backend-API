@@ -102,6 +102,9 @@ const getCertainCustomer = async (customerID) => {
 
 const analyzeImage = async (file, customerID, workerID) => {
     try {
+        // Convert customerID to an integer
+        const customerIdInt = parseInt(customerID);
+
         const form = new FormData();
         form.append('image', file.buffer, file.originalname);
 
@@ -128,7 +131,7 @@ const analyzeImage = async (file, customerID, workerID) => {
                 },
                 customer: {
                     connect: {
-                        customerID: customerID
+                        customerID: customerIdInt
                     }
                 },
                 worker: {
