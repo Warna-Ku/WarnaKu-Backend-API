@@ -2,8 +2,9 @@ import Joi from "joi";
 
 const registerCustomerValidation = Joi.object({ 
     fullname: Joi.string().max(100).required(),
-    phone: Joi.string().max(20).optional(),
-    address: Joi.string().max(100).required()
+    phone: Joi.string().max(20).required(),
+    address: Joi.string().max(100).required(),
+    email: Joi.string().email().max(100).required()
 });
 
 const updateCustomerValidation = Joi.object({

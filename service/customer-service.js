@@ -25,7 +25,8 @@ const register = async (request) => {
         select: {
             fullname: true,
             phone: true,
-            address: true
+            address: true,
+            email: true
         }
     });
 }
