@@ -37,7 +37,6 @@ Please go to Google Cloud Console and create a service account with permissions 
 | /users/update                         | PATCH        | Update current user by UID                    ✅           |
 | /users/logout                        | DELETE        | Sign out a user                ✅              |
 | /users                          | GET         | Get all users ✅                               |
-| /users/password                 | POST        | Reset user's password                         |
 | /users/:uid                     | GET         | Get specific user by UID       ✅                       | 
 | /users/:uid/profile-picture         | PUT        | Upload a profile picture for a user           |
 | /analysis                        | POST        | Perform a prediction using an uploaded image  |
@@ -55,11 +54,11 @@ Create a new user account.
 - Path: /users
 - Body Parameters:
 ```json
-  {
-    "name": "Takahashi Ran",
-    "email": "takaran@example.com",
-    "password": "password123"
-  }
+{
+    "name": "Hanson",
+    "email": "hanson@example.com",
+    "password": "secret123"
+}
 ```
 #### Response
 
@@ -67,9 +66,13 @@ Success (HTTP 200):
 
 ```json
 {
-    "status": "Success",
-    "msg": "User added Successfully, please login",
-    "uid": "User's unique ID"
+    "error": false,
+    "message": "User created successfully",
+    "data": {
+        "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
+        "email": "hanson@example.com",
+        "name": "Hanson"
+    }
 }
 ```
 
@@ -77,8 +80,8 @@ Success (HTTP 200):
 Failure (HTTP 400):
 ```json
 {
-    "status": "Fail",
-    "msg": "Username is already registered"
+    "error": true,
+    "message": "Email's already registered"
 }
 ```
 
@@ -93,8 +96,8 @@ Login and authenticate a user.
 - Body Parameters:
 ```json
 {
-  "email": "takaran@example.com",
-  "password": "password123"
+    "email": "hanson@example.com",
+    "password": "secret123"
 }
 ```
 
@@ -103,27 +106,27 @@ Login and authenticate a user.
 Success (HTTP 200):
 ```json
 {
-    "status": "Success",
-    "msg": "Login successfully",
-    "data": {
-      "uid": "User's unique ID",
-      "email": "takaran@example.com",
-      "token": "Unique-token"
+    "error": false,
+    "message": "Login successfully",
+    "loginResult": {
+        "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
+        "name": "Hanson",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJiMTJkMWU2Zi1hNjE5LTQyNGUtOWQ1Zi01NzJhZjFiZTJmYjMiLCJuYW1lIjoiSGFuc29uIiwiZW1haWwiOiJoYW5zb25AZXhhbXBsZS5jb20iLCJpYXQiOjE3MTg3MjYxMjEsImV4cCI6MTcxODcyOTcyMX0.i6uqvq7P2XIWhujarbvllnzIN9F1X7gFazWGGehDbs4"
     }
 }
 ```
 
-Failure (HTTP 404):
+Failure (HTTP 401):
 ```json
 {
-    "status": "Fail",
-    "msg": "username or password wrong"
+    "error": true,
+    "message": "Email or password incorrect"
 }
 ```
 
 ### PATCH /users/update
 
-Update the current authenticated user's data
+Update the current authenticated user's data (partial data)
 
 #### Request
 
@@ -132,7 +135,8 @@ Update the current authenticated user's data
 - Body Parameters:
 ```json
 {
-  "uid": "2320bd80-d825-5123-8913-03a98bab382d"
+  "uid": "2320bd80-d825-5123-8913-03a98bab382d",
+  "email": "Hanson Sujatmoko"
 }
 ```
 
@@ -141,20 +145,28 @@ Update the current authenticated user's data
 Success (HTTP 200):
 ```json
 {
-    "status": "Success",
-    "msg": "Update successfully",
-    "data": {
-      "email": "User's updated email",
-      "nama": "User's updated name",
+    "error": false,
+    "message": "Update successfully",
+    "updateResult": {
+        "email": "hanson@example.com",
+        "name": "Hanson Sujatmoko"
     }
+}
+```
+
+Failure (HTTP 400):
+```json
+{
+    "error": false,
+    "message": "User ID is required for update"
 }
 ```
 
 Failure (HTTP 404):
 ```json
 {
-    "status": "Fail",
-    "msg": "User is not found"
+    "error": false,
+    "message": "User is not found"
 }
 ```
 
@@ -172,16 +184,24 @@ Logout the currently authenticated user.
 - Success (HTTP 200):
 ```json
 {
-    "status": "Success",
-    "msg": "Logout Successfully"
+    "error": false,
+    "message": "Logout successfully"
+}
+```
+
+Failure (HTTP 400):
+```json
+{
+    "error": false,
+    "message": "User ID is required for logout"
 }
 ```
 
 - Failure (HTTP 404):
 ```json
 {
-    "status": "Fail",
-    "msg": "User is not found. User can't log out"
+    "error": false,
+    "message": "User is not found. User can't log out"
 }
 ```
 
@@ -199,29 +219,32 @@ Success (HTTP 200):
 ```json
 {
     "status": "Success",
-    "msg": "All data is retrieved successfully",
-    "data": [
+    "message": "All user's data is found",
+    "listUser": [
         {
-            "id": "1",
-            "name": "Takahashi Ran",
-            "email": "takaran@example.com",
-            "phone": "1234567890"
+            "uid": "071446ff-74d7-487d-92a2-63a8c18aac9c",
+            "email": "tole",
+            "name": "tole@gmaill.com"
         },
         {
-            "id": "2",
-            "name": "Bruno Faran",
-            "email": "brunofaran@example.com",
-            "phone": "345667890"
+            "uid": "11c60636-1a4d-4b44-9527-37fc27ef83fb",
+            "email": "onta@gmail.com",
+            "name": "onta"
+        },
+        {
+            "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
+            "email": "hanson@example.com",
+            "name": "Hanson Sujatmoko"
         }
     ]
 }
 ```
 
-Error (HTTP 500):
+Error (HTTP 404):
 ```json
 {
-    "status": "Failure",
-    "msg": "Error in retrieving users"
+    "error": "true",
+    "message": "No Users Found"
 }
 ```
 
@@ -237,13 +260,12 @@ Error (HTTP 500):
 Success (HTTP 200):
 ```json
 {
-    "status": "Success",
-    "msg": "User's data is found",
-    "data": {
-        "uid": "1",
-        "name": "Takahashi Ran",
-        "email": "takaran@example.com",
-        "phone": "1234567890"
+    "error": false,
+    "message": "The user's data retrieved successfully",
+    "user": {
+        "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
+        "email": "hanson@example.com",
+        "name": "Hanson Sujatmoko"
     }
 }
 ```
@@ -251,22 +273,18 @@ Success (HTTP 200):
 Not Found (HTTP 404):
 ```json
 {
-    "status": "Failure",
-    "msg": "User's data is not found"
+    "error": true,
+    "message": "User's data is not found"
 }
 ```
 
 Error (HTTP 500):
 ```json
 {
-    "status": "Failure",
-    "msg": "Error in retrieving users"
+    "error": true,
+    "message": "Error in retrieving users"
 }
 ```
-
-
-### PUT /users/:uid
-
 
 
 

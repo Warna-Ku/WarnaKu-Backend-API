@@ -66,7 +66,7 @@ const login = async (req) => {
     };
 
     //Generate JWT Token
-    const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "1d" });
 
     // Check if user already has a token in database
     const existingUserWithToken = await prismaClient.user.findUnique({
@@ -216,7 +216,7 @@ const getCertainUser = async (uid) => {
     });
 
     if (!user) {
-        throw new ResponseError(404, 'User is not found');
+        throw new ResponseError(404, 'User\'s is not found');
     }
 
     return user;

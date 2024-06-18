@@ -156,10 +156,42 @@ const analyzeImage = async (file, customerID, workerID) => {
                         uid: workerID
                     }
                 }
+            },
+            include: {
+                palette: {
+                    include: {
+                        colors: true
+                    }
+                },
+                customer: true,
+                worker: true
             }
         });
 
-        return analysisReport;
+        // Return the structured data
+        return {
+            createdAt: analysisReport.createdAt,
+            season: analysisReport.season,
+            paletteDescription: analysisReport.palette.description,
+            paletteImg: analysisReport.palette.imageURL,
+            colors: analysisReport.palette.colors.map(color => ({
+                name: color.name,
+                code: color.code,
+                description: color.description,
+                image: color.imageURL
+            })),
+            customer: {
+                fullname: analysisReport.customer.fullname,
+                phone: analysisReport.customer.phone,
+                address: analysisReport.customer.address,
+                email: analysisReport.customer.email
+            },
+            worker: {
+                uid: analysisReport.worker.uid,
+                name: analysisReport.worker.name,
+                email: analysisReport.worker.email
+            }
+        }
     } catch (e) {
         throw new ResponseError(500, e.message);
     }
