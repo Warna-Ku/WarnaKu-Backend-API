@@ -189,7 +189,7 @@ const getAllHistoryAnalysisReports = async (workerID) => {
         throw new ResponseError(404, "No analysis reports found");
     }
 
-    return reports.map(report => ([
+    return reports.map(report => (
         {
             season: report.season,
             createdAt: report.createdAt,
@@ -213,7 +213,7 @@ const getAllHistoryAnalysisReports = async (workerID) => {
                 email: report.worker.email
             }
         }
-    ]));
+    ));
 }
 
 
