@@ -147,6 +147,7 @@ const analyzeImage = async (file, customerID, workerID) => {
         throw new Error(e.message);
     }
 }
+
 const getAllHistoryAnalysisReports = async (workerID) => {
     const reports = await prismaClient.colorAnalysisReport.findMany({
         where: {

@@ -24,7 +24,7 @@ userRouter.post('/customers', authorize, customerController.register);
 userRouter.patch('/customers/update', authorize, customerController.update);
 userRouter.get('/customers', authorize, customerController.getAll);
 userRouter.get('customers/:customerID', authorize, customerController.getById);
-userRouter.get('/customers/history', customerController.getAllHistoryAnalysisReports);
+userRouter.post('/customers/history', authorize, customerController.getAllHistoryAnalysisReports);
 
 
 export {
