@@ -23,6 +23,7 @@ const register = async (request) => {
     return prismaClient.customer.create({
         data: customer,
         select: {
+            customerID: true,
             fullname: true,
             phone: true,
             address: true,
