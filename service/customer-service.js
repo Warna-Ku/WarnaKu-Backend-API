@@ -147,11 +147,53 @@ const analyzeImage = async (file, customerID, workerID) => {
         throw new Error(e.message);
     }
 }
+const getAllHistoryAnalysisReports = async (workerID) => {
+    const reports = await prismaClient.colorAnalysisReport.findMany({
+        where: {
+            workerID: workerID
+        },
+        include: {
+            palette: {
+                include: {
+                    colors: true
+                }
+            },
+            customer: true,
+            worker: true
+        }
+    });
+
+    return reports.map(report => ({
+        season: report.season,
+        createdAt: report.createdAt,
+        paletteDescription: report.palette.description,
+        paletteImg: report.palette.imageURL,
+        colors: report.palette.colors.map(color => ({
+            name: color.name,
+            code: color.code,
+            description: color.description,
+            image: color.imageURL
+        })),
+        customer: {
+            fullname: report.customer.fullname,
+            phone: report.customer.phone,
+            address: report.customer.address,
+            email: report.customer.email
+        },
+        worker: {
+            uid: report.worker.uid,
+            name: report.worker.name,
+            email: report.worker.email
+        }
+    }));
+}
+
 
 export default {
     register,
     update,
     getAllCustomer,
     getCertainCustomer,
-    analyzeImage
+    analyzeImage,
+    getAllHistoryAnalysisReports
 }

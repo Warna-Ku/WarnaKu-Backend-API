@@ -72,10 +72,26 @@ const analyzeImage = async (req, res, next) => {
     }
 }
 
+const getAllHistoryAnalysisReports = async (req, res, next) => {
+    try {
+        const { workerID } = req.body;
+        const reports = await customerService.getAllHistoryAnalysisReports(workerID);
+
+        res.status(200).json({
+            error: false,
+            message: "Histories retrieved successfully",
+            analysisReports: reports
+        });
+    } catch (e) {
+        next(e);
+    }
+}
+
 export default {
     register,
     update,
     getAll,
     getById,
-    analyzeImage
+    analyzeImage,
+    getAllHistoryAnalysisReports
 }
