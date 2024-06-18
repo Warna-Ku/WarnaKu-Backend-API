@@ -113,6 +113,10 @@ const login = async (req) => {
 const update = async (request) => {
     const updateRequestUser = validate(updateUserValidation, request);
 
+    if (!updateRequestUser.uid) {
+        throw new ResponseError(400, "User ID is required for update");
+    }
+
     const userInDatabase = await prismaClient.user.count({
         where: {
             uid: updateRequestUser.uid
@@ -153,6 +157,10 @@ const update = async (request) => {
 const logout = async (req) => {
     const userId = req.userId;
 
+    if (!userId) {
+        throw new ResponseError(400, "User ID is required for logout");
+    }
+
     const user = await prismaClient.user.findUnique({
         where: {
             uid: userId
@@ -184,7 +192,11 @@ const getAllUser = async () => {
             name: true
         }
     });
-    
+
+    if (!users.length) {
+        throw new ResponseError(404, "No users found");
+    }
+
     return users;
 }
 

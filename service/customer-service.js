@@ -78,6 +78,10 @@ const getAllCustomer = async () => {
         }
     });
 
+    if (!customers.length) {
+        throw new ResponseError(404, "No customers found");
+    }
+
     return customers;
 }
 
@@ -102,6 +106,16 @@ const getCertainCustomer = async (customerID) => {
 }
 
 const analyzeImage = async (file, customerID, workerID) => {
+    if (!file) {
+        throw new ResponseError(400, "File is required for analysis");
+    }
+    if (!customerID) {
+        throw new ResponseError(400, "Customer ID is required for analysis");
+    }
+    if (!workerID) {
+        throw new ResponseError(400, "Worker ID is required for analysis");
+    }
+
     try {
         // Convert customerID to an integer
         const customerIdInt = parseInt(customerID);
@@ -115,7 +129,9 @@ const analyzeImage = async (file, customerID, workerID) => {
             }
         });
 
-        // return response.data;
+        if (!response.data || !response.data.user_palette) {
+            throw new ResponseError(500, "Failed to analyze the image");
+        }
 
         //Extract necessary data from the response
         const { user_palette } = response.data;
@@ -145,11 +161,15 @@ const analyzeImage = async (file, customerID, workerID) => {
 
         return analysisReport;
     } catch (e) {
-        throw new Error(e.message);
+        throw new ResponseError(500, e.message);
     }
 }
 
 const getAllHistoryAnalysisReports = async (workerID) => {
+    if (!workerID) {
+        throw new ResponseError(400, "Worker ID is required");
+    }
+
     const reports = await prismaClient.colorAnalysisReport.findMany({
         where: {
             workerID: workerID
@@ -165,29 +185,35 @@ const getAllHistoryAnalysisReports = async (workerID) => {
         }
     });
 
-    return reports.map(report => ({
-        season: report.season,
-        createdAt: report.createdAt,
-        paletteDescription: report.palette.description,
-        paletteImg: report.palette.imageURL,
-        colors: report.palette.colors.map(color => ({
-            name: color.name,
-            code: color.code,
-            description: color.description,
-            image: color.imageURL
-        })),
-        customer: {
-            fullname: report.customer.fullname,
-            phone: report.customer.phone,
-            address: report.customer.address,
-            email: report.customer.email
-        },
-        worker: {
-            uid: report.worker.uid,
-            name: report.worker.name,
-            email: report.worker.email
+    if (!reports.length) {
+        throw new ResponseError(404, "No analysis reports found");
+    }
+
+    return reports.map(report => ([
+        {
+            season: report.season,
+            createdAt: report.createdAt,
+            paletteDescription: report.palette.description,
+            paletteImg: report.palette.imageURL,
+            colors: report.palette.colors.map(color => ({
+                name: color.name,
+                code: color.code,
+                description: color.description,
+                image: color.imageURL
+            })),
+            customer: {
+                fullname: report.customer.fullname,
+                phone: report.customer.phone,
+                address: report.customer.address,
+                email: report.customer.email
+            },
+            worker: {
+                uid: report.worker.uid,
+                name: report.worker.name,
+                email: report.worker.email
+            }
         }
-    }));
+    ]));
 }
 
 

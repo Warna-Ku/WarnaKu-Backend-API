@@ -10,4 +10,7 @@ export {
     ResponseError
 }
 
-// Throw response error and we'll catch in the middleware and convert the error
+// Usage examples:
+// throw new ResponseError(400, "Bad Request: Missing required fields");
+// throw new ResponseError(404, "Not Found: Customer does not exist");
+// throw new ResponseError(500, "Internal Server Error: Unexpected failure");

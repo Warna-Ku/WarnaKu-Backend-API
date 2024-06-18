@@ -65,7 +65,7 @@ const analyzeImage = async (req, res, next) => {
         res.status(200).json({
             error: false,
             message: "Image analyzed successfully",
-            data: result
+            resultAnalysis: result
         });
     } catch (e) {
         next(e);
