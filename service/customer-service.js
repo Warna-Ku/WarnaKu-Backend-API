@@ -136,6 +136,11 @@ const analyzeImage = async (file, customerID, workerID) => {
         //Upload the image to Google Cloud Storage
         const imageURL = await uploadImageToGCS(file, 'customers/');
 
+        console.log('Image URL:', imageURL); // Logging image URL
+
+        // Update the customer's faceImageURL in the database
+        console.log('Updating customer with ID:', customerIdInt, 'with imageURL:', imageURL);
+
         //update the customer's faceImageURL in the database
         const updatedCustomer= await prismaClient.customer.update({
             where: {
