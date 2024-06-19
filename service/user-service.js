@@ -1,4 +1,5 @@
 import { validate } from "../validation/validation.js";
+import imgUpload from '../utils/storeToGCS.js';
 import { getUserValidation, loginUserValidation, registerUserValidation, updateUserValidation } from "../validation/user-validation.js";
 import { prismaClient } from "../application/database.js"
 import { ResponseError } from "../error/response-error.js";
@@ -7,8 +8,23 @@ import jwt from "jsonwebtoken";
 
 // import { v4 as uuid } from "uuid";
 
+const uploadImageToGCS = async (file, folderPath) => {
+    const req = { file };
+    const res = {};
+    await imgUpload.storeToGCS(req, res, () => { }, folderPath);
+
+    if (req.file.cloudStorageError) {
+        throw new ResponseError(500, 'Failed to upload image to GCS')
+    }
+
+    return req.file.cloudStoragePublicUrl;
+}
+
 const register = async (request) => {
-    const user = validate(registerUserValidation, request);
+    // Extract profile_photo_url from request
+    const { profile_photo_url, ...userData } = request;
+
+    const user = validate(registerUserValidation, userData);
 
     //To Check if the email is already registered/exist
     const countUser = await prismaClient.user.count({
@@ -23,15 +39,24 @@ const register = async (request) => {
 
     user.password = await bcrypt.hash(user.password, 10);
 
+    // Upload profile photo to GCS and get public URL
+    if (!profile_photo_url) {
+        user.faceImageURL = await uploadImageToGCS(profile_photo_url, 'users/');
+    }
+
     //If the user's not existed => create account
-    return prismaClient.user.create({
+    const createdUser = await prismaClient.user.create({
         data: user,
         select: {
             uid: true,
             email: true,
-            name: true
+            name: true,
+            faceImageURL: true
         }
     });
+
+    //Return user data with profile
+    return createdUser;
 }
 
 const login = async (req) => {

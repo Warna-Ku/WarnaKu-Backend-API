@@ -25,7 +25,7 @@ const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
 const imgUpload = {};
 
-imgUpload.storeToGCS = async (req, res, next) => {
+imgUpload.storeToGCS = async (req, res, next, folderPath) => {
     try {
         if (!req.file) return next();
 
@@ -40,7 +40,6 @@ imgUpload.storeToGCS = async (req, res, next) => {
         }
 
         // Specify the folder path where we want to store the file
-        const folderPath = 'users/' //folder /users inside bucket
         const objectGCSname = `${folderPath}${uuidv4()}${originalExtension}`;
         const uploadedFile = bucket.file(objectGCSname);
 
@@ -50,15 +49,17 @@ imgUpload.storeToGCS = async (req, res, next) => {
             }
         });
 
+        // Handle stream errors
         stream.on('error', (err) => {
             req.file.cloudStorageError = err;
             next(err);
         });
 
+        // Handle stream finish event (file upload success)
         stream.on('finish', () => {
-            req.file.cloudStorageObject = objectGCSname;
-            req.file.cloudStoragePublicUrl = getPublicURL(objectGCSname);
-            next();
+            req.file.cloudStorageObject = objectGCSname; // Store GCS object name in request object
+            req.file.cloudStoragePublicUrl = getPublicURL(objectGCSname); // Generate public URL
+            next(); // Proceed to next middleware
         });
 
         stream.end(req.file.buffer);

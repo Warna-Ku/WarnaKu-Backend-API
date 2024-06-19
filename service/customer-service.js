@@ -1,5 +1,6 @@
 import axios from 'axios';
 import FormData from 'form-data';
+import imgUpload from '../utils/storeToGCS.js';
 import { validate } from "../validation/validation.js";
 import { registerCustomerValidation, getCustomerValidation, updateCustomerValidation } from "../validation/customer-validation.js";
 import { prismaClient } from "../application/database.js";
@@ -105,6 +106,18 @@ const getCertainCustomer = async (customerID) => {
     return customer;
 }
 
+const uploadImageToGCS = async (file, folderPath) => {
+    const req = { file };
+    const res = {};
+    await imgUpload.storeToGCS(req, res, () => {}, folderPath);
+
+    if (req.file.cloudStorageError) {
+        throw new ResponseError(500, 'Failed to upload image to GCS')
+    }
+
+    return req.file.cloudStoragePublicUrl;
+}
+
 const analyzeImage = async (file, customerID, workerID) => {
     if (!file) {
         throw new ResponseError(400, "File is required for analysis");
@@ -119,6 +132,19 @@ const analyzeImage = async (file, customerID, workerID) => {
     try {
         // Convert customerID to an integer
         const customerIdInt = parseInt(customerID);
+
+        //Upload the image to Google Cloud Storage
+        const imageURL = await uploadImageToGCS(file, 'customers/');
+
+        //update the customer's faceImageURL in the database
+        await prismaClient.customer.update({
+            where: {
+                customerID: customerIdInt
+            },
+            data: {
+                faceImageURL: imageURL
+            }
+        })
 
         const form = new FormData();
         form.append('image', file.buffer, file.originalname);
@@ -184,7 +210,8 @@ const analyzeImage = async (file, customerID, workerID) => {
                 fullname: analysisReport.customer.fullname,
                 phone: analysisReport.customer.phone,
                 address: analysisReport.customer.address,
-                email: analysisReport.customer.email
+                email: analysisReport.customer.email,
+                faceImageURL: analysisReport.customer.faceImageURL
             },
             worker: {
                 uid: analysisReport.worker.uid,

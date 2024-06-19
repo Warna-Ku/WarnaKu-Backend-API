@@ -2,11 +2,11 @@ import userService from "../service/user-service.js";
 
 const register = async (req, res, next) => {
     try {
-        const result = await userService.register(req.body);
+        const result = await userService.register(req.body, req.file);
         res.status(200).json({
             error: false,
             message: "User created successfully",
-            data: result
+            registerResult: result
         });
     } catch (e) {
         next(e);
@@ -59,7 +59,7 @@ const getById = async (req, res, next) => {
         res.status(200).json({
             error: false,
             message: "The user's data retrieved successfully",
-            user: result
+            userData: result
         });
     } catch (e) {
         next(e);

@@ -2,12 +2,11 @@ import express from "express";
 import userController from "../controller/user-controller.js";
 import customerController from "../controller/customer-controller.js";
 import authorize from "../middleware/jwtAuth.js";
-import imgUpload from "../utils/storeToGCS.js";
 import multer from "../middleware/multer.js";
 
 const userRouter = express.Router();
 
-userRouter.post('/users', multer.single('profile_photo_url'), imgUpload.storeToGCS, userController.register);
+userRouter.post('/users', multer.single('profile_photo_url'), userController.register);
 userRouter.post('/users/login', userController.login);
 userRouter.get('/users', userController.getAll);
 
