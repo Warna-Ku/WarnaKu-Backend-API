@@ -38,6 +38,11 @@ Please go to Google Cloud Console and create a service account with permissions 
 | /users/logout                        | DELETE        | Sign out a user                ✅              |
 | /users                          | GET         | Get all users ✅                               |
 | /users/:uid                     | GET         | Get specific user by UID       ✅                       | 
+| /customers                     | POST         | Create customer data       ✅                       | 
+| /customers/update                     | PATCH         | Update certain customer's data (partial data)       ✅                       | 
+| /customers                     | GET         | Get all customers       ✅                       | 
+| /customers/:customerID                    | GET         | Get specific customer by customerID      ✅                       | 
+
 | /users/:uid/profile-picture         | PUT        | Upload a profile picture for a user           |
 | /analysis                        | POST        | Perform a prediction using an uploaded image  |
 | /records                        | GET         | Get all Analysis Records articles                             |
@@ -286,7 +291,176 @@ Error (HTTP 500):
 }
 ```
 
+### POST /customers
 
+Create a new customers data.
 
+#### Request
+- Method: POST
+- Path: /customers
+- Body Parameters:
+```json
+{
+    "fullname": "Mamang",
+    "phone": "957563645837",
+    "address": "Jalan Makmur",
+    "email" : "mamang@example.com"
+}
+```
+#### Response
 
- 
+Success (HTTP 200):
+
+```json
+{
+    "error": false,
+    "message": "Customer created successfully",
+    "data": {
+        "customerID": 13,
+        "fullname": "Mamang",
+        "phone": "957563645837",
+        "address": "Jalan Makmur",
+        "email": "mamang@example.com"
+    }
+}
+```
+
+Failure (HTTP 400):
+```json
+{
+    "error": true,
+    "message": "Email's already registered"
+}
+```
+
+### PATCH /customers/update
+
+Update certain customer's data (partial data)
+
+#### Request
+
+- Method: PATCH
+- Path: /customers/update
+- Body Parameters:
+```json
+{
+    "customerID": 13,
+    "phone": "08124356367467"
+}
+```
+
+#### Response
+
+Success (HTTP 200):
+```json
+{
+    "error": false,
+    "message": "Update successfully",
+    "updateResult": {
+        "customerID": 13,
+        "fullname": "Mamang",
+        "phone": "08124356367467",
+        "address": "Jalan Makmur"
+    }
+}
+```
+
+Failure (HTTP 400):
+```json
+{
+    "error": false,
+    "message": "User ID is required for update"
+}
+```
+
+Failure (HTTP 404):
+```json
+{
+    "error": false,
+    "message": "User is not found"
+}
+```
+
+### GET /customers
+
+This endpoint is used to retrieve a list of customers.
+
+- Method: GET
+- Path: /customers
+- Body Parameters: No parameters are required.
+
+#### Response
+
+Success (HTTP 200):
+```json
+{
+    "error": false,
+    "message": "All Customer's data is found",
+    "listCustomer": [
+        {
+            "fullname": "wildan ahmad",
+            "phone": "082334163789",
+            "address": "Roken Asri",
+            "faceImageURL": null
+        },
+        {
+            "fullname": "faqih yusuf",
+            "phone": "6547898",
+            "address": "Roken Asri",
+            "faceImageURL": null
+        },
+        {
+            "fullname": "Mamang",
+            "phone": "08124356367467",
+            "address": "Jalan Makmur",
+            "faceImageURL": null
+        }
+    ]
+}
+```
+
+Error (HTTP 404):
+```json
+{
+    "error": "true",
+    "message": "No customers found"
+}
+```
+
+### GET /customers/:customerID
+
+- Method: GET
+- Path: /customers/:customerID
+- Route Parameters:
+  - customerID (string): The Customer ID (customerID) of the customer to retrieve.
+
+#### Response
+
+Success (HTTP 200):
+```json
+{
+    "error": false,
+    "message": "The user's data retrieved successfully",
+    "user": {
+        "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
+        "email": "hanson@example.com",
+        "name": "Hanson Sujatmoko"
+    }
+}
+```
+
+Not Found (HTTP 404):
+```json
+{
+    "error": true,
+    "message": "User's data is not found"
+}
+```
+
+Error (HTTP 500):
+```json
+{
+    "error": true,
+    "message": "Error in retrieving users"
+}
+```

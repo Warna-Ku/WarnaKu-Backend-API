@@ -87,9 +87,10 @@ const getAllCustomer = async () => {
 }
 
 const getCertainCustomer = async (customerID) => {
+    const customerIdInt = parseInt(customerID)
     const customer = await prismaClient.customer.findUnique({
         where: {
-            customerID: customerID
+            customerID: customerIdInt
         },
         select: {
             customerID: true,

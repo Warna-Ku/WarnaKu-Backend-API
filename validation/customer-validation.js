@@ -12,7 +12,8 @@ const updateCustomerValidation = Joi.object({
     customerID: Joi.number().positive().required(),
     fullname: Joi.string().max(100).optional(),
     phone: Joi.string().max(100).optional(),
-    address: Joi.string().max(100).optional()
+    address: Joi.string().max(100).optional(),
+    email: Joi.string().max(100).optional()
 });
 
 const getCustomerValidation = Joi.object({
