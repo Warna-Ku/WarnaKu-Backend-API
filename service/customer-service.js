@@ -137,14 +137,23 @@ const analyzeImage = async (file, customerID, workerID) => {
         const imageURL = await uploadImageToGCS(file, 'customers/');
 
         //update the customer's faceImageURL in the database
-        await prismaClient.customer.update({
+        const updatedCustomer= await prismaClient.customer.update({
             where: {
                 customerID: customerIdInt
             },
             data: {
                 faceImageURL: imageURL
+            }, select: {
+                faceImageURL: true
             }
-        })
+        });
+
+        console.log('Updated Customer:', updatedCustomer);
+
+
+        if (!updatedCustomer || !updatedCustomer.faceImageURL) {
+            throw new ResponseError(500, 'Failed to update faceImageURL in the database');
+        }
 
         const form = new FormData();
         form.append('image', file.buffer, file.originalname);
@@ -264,7 +273,8 @@ const getAllHistoryAnalysisReports = async (workerID) => {
                 fullname: report.customer.fullname,
                 phone: report.customer.phone,
                 address: report.customer.address,
-                email: report.customer.email
+                email: report.customer.email,
+                faceImageURL: report.customer.faceImageURL
             },
             worker: {
                 uid: report.worker.uid,
