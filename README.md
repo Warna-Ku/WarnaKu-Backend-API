@@ -162,7 +162,7 @@ Success (HTTP 200):
 Failure (HTTP 400):
 ```json
 {
-    "error": false,
+    "error": true,
     "message": "User ID is required for update"
 }
 ```
@@ -170,7 +170,7 @@ Failure (HTTP 400):
 Failure (HTTP 404):
 ```json
 {
-    "error": false,
+    "error": true,
     "message": "User is not found"
 }
 ```
@@ -182,7 +182,14 @@ Logout the currently authenticated user.
 #### Request
 
 - Method: POST
-- Path: /Signout
+- Path: /users/logout
+- Body Parameters:
+```json
+{
+  "uid": "2320bd80-d825-5123-8913-03a98bab382d"
+}
+```
+
 
 #### Response
 
@@ -197,7 +204,7 @@ Logout the currently authenticated user.
 Failure (HTTP 400):
 ```json
 {
-    "error": false,
+    "error": true,
     "message": "User ID is required for logout"
 }
 ```
@@ -205,7 +212,7 @@ Failure (HTTP 400):
 - Failure (HTTP 404):
 ```json
 {
-    "error": false,
+    "error": true,
     "message": "User is not found. User can't log out"
 }
 ```
@@ -223,7 +230,7 @@ This endpoint is used to retrieve a list of users.
 Success (HTTP 200):
 ```json
 {
-    "status": "Success",
+    "error": false,
     "message": "All user's data is found",
     "listUser": [
         {
@@ -248,7 +255,7 @@ Success (HTTP 200):
 Error (HTTP 404):
 ```json
 {
-    "error": "true",
+    "error": true,
     "message": "No Users Found"
 }
 ```
@@ -368,16 +375,16 @@ Success (HTTP 200):
 Failure (HTTP 400):
 ```json
 {
-    "error": false,
-    "message": "User ID is required for update"
+    "error": true,
+    "message": "customerID is required for update"
 }
 ```
 
 Failure (HTTP 404):
 ```json
 {
-    "error": false,
-    "message": "User is not found"
+    "error": true,
+    "message": "Customer is not found"
 }
 ```
 
@@ -401,18 +408,21 @@ Success (HTTP 200):
             "fullname": "wildan ahmad",
             "phone": "082334163789",
             "address": "Roken Asri",
+            "email": "wildanahmad@example.com",
             "faceImageURL": null
         },
         {
             "fullname": "faqih yusuf",
             "phone": "6547898",
             "address": "Roken Asri",
+            "email": "faqih@example.com",
             "faceImageURL": null
         },
         {
             "fullname": "Mamang",
             "phone": "08124356367467",
             "address": "Jalan Makmur",
+            "email": "mamang@example.com",
             "faceImageURL": null
         }
     ]
@@ -422,7 +432,7 @@ Success (HTTP 200):
 Error (HTTP 404):
 ```json
 {
-    "error": "true",
+    "error": true,
     "message": "No customers found"
 }
 ```
@@ -440,11 +450,13 @@ Success (HTTP 200):
 ```json
 {
     "error": false,
-    "message": "The user's data retrieved successfully",
-    "user": {
-        "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
-        "email": "hanson@example.com",
-        "name": "Hanson Sujatmoko"
+    "message": "The customer's data retrieved successfully",
+    "customer": {
+        "customerID": 13,
+        "fullname": "Mamang",
+        "phone": "08124356367467",
+        "address": "Jalan Makmur",
+        "email": "mamang@example.com"
     }
 }
 ```
@@ -453,14 +465,6 @@ Not Found (HTTP 404):
 ```json
 {
     "error": true,
-    "message": "User's data is not found"
-}
-```
-
-Error (HTTP 500):
-```json
-{
-    "error": true,
-    "message": "Error in retrieving users"
+    "message": "Customer data is not found"
 }
 ```

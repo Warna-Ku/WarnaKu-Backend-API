@@ -64,7 +64,8 @@ const update = async (request) => {
             customerID: true,
             fullname: true,
             phone: true,
-            address: true
+            address: true,
+            email: true
         }
     });
 }
@@ -75,6 +76,7 @@ const getAllCustomer = async () => {
             fullname: true,
             phone: true,
             address: true,
+            email: true,
             faceImageURL: true
         }
     });
@@ -96,12 +98,13 @@ const getCertainCustomer = async (customerID) => {
             customerID: true,
             fullname: true,
             phone: true,
-            address: true
+            address: true,
+            email: true
         }
     });
 
     if (!customer) {
-        throw new ResponseError(404, 'Customer is not found ');
+        throw new ResponseError(404, 'Customer data is not found ');
     }
 
     return customer;
@@ -110,7 +113,7 @@ const getCertainCustomer = async (customerID) => {
 const uploadImageToGCS = async (file, folderPath) => {
     const req = { file };
     const res = {};
-    await imgUpload.storeToGCS(req, res, () => {}, folderPath);
+    await imgUpload.storeToGCS(req, res, () => { }, folderPath);
 
     if (req.file.cloudStorageError) {
         throw new ResponseError(500, 'Failed to upload image to GCS')
@@ -143,7 +146,7 @@ const analyzeImage = async (file, customerID, workerID) => {
         console.log('Updating customer with ID:', customerIdInt, 'with imageURL:', imageURL);
 
         //update the customer's faceImageURL in the database
-        const updatedCustomer= await prismaClient.customer.update({
+        const updatedCustomer = await prismaClient.customer.update({
             where: {
                 customerID: customerIdInt
             },
@@ -248,6 +251,9 @@ const getAllHistoryAnalysisReports = async (workerID) => {
     const reports = await prismaClient.colorAnalysisReport.findMany({
         where: {
             workerID: workerID
+        },
+        orderBy: {
+            createdAt: 'desc' //Make a list from the newest analysis report
         },
         include: {
             palette: {

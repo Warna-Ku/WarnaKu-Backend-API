@@ -71,7 +71,7 @@ const getAll = async (req, res, next) => {
         const users = await userService.getAllUser();
 
         res.status(200).json({
-            status: "Success",
+            error: false,
             message: "All user's data is found",
             listUser: users
         })
