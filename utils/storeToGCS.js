@@ -25,18 +25,21 @@ const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
 const imgUpload = {};
 
-imgUpload.storeToGCS = async (req, res, next, folderPath) => {
+imgUpload.storeToGCS = async (req, res, next, folderPath) => { // Make sure 'next' is a parameter here
     try {
         if (!req.file) return next();
+
+        // Ensure req.file.originalname exists and is a string
+        // if (typeof req.file.originalname !== 'string') {
+        //     throw new Error('Invalid file uploaded');
+        // }
 
         const originalExtension = path.extname(req.file.originalname);
         const mimeType = req.file.mimetype;
 
         // Checking if the file's type is allowed
         if (!allowedImageTypes.includes(mimeType)) {
-            return res.status(400).json({
-                error: 'The allowed image types are only JPEG, JPG, and PNG'
-            });
+            throw new Error('The allowed image types are only JPEG, JPG, and PNG');
         }
 
         // Specify the folder path where we want to store the file
@@ -45,7 +48,8 @@ imgUpload.storeToGCS = async (req, res, next, folderPath) => {
 
         const stream = uploadedFile.createWriteStream({
             metadata: {
-                contentType: mimeType
+                contentType: mimeType,
+                predefinedAcl: 'publicRead'
             }
         });
 
@@ -65,7 +69,7 @@ imgUpload.storeToGCS = async (req, res, next, folderPath) => {
         stream.end(req.file.buffer);
     } catch (error) {
         console.error('Error uploading to GCS:', error);
-        next(error);
+        next(error); // Pass error to the next middleware
     }
 };
 

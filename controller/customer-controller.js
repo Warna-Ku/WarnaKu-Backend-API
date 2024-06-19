@@ -57,10 +57,13 @@ const getById = async (req, res, next) => {
 
 const analyzeImage = async (req, res, next) => {
     try {
-        const { customerID } = req.body;
-        const { workerID } = req.body;
+        console.log('File:', req.file); // Logging the uploaded file
+        console.log('Body:', req.body); // Logging the request body
 
-        const result = await customerService.analyzeImage(req.file, customerID, workerID);
+        const { customerID, workerID } = req.body;
+        const file = req.file;
+
+        const result = await customerService.analyzeImage(file, customerID, workerID);
 
         res.status(200).json({
             error: false,
