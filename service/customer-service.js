@@ -221,6 +221,7 @@ const analyzeImage = async (file, customerID, workerID) => {
                 image: color.imageURL
             })),
             customer: {
+                customerID: analysisReport.customer.customerID,
                 fullname: analysisReport.customer.fullname,
                 phone: analysisReport.customer.phone,
                 address: analysisReport.customer.address,
@@ -275,6 +276,7 @@ const getAllHistoryAnalysisReports = async (workerID) => {
                 image: color.imageURL
             })),
             customer: {
+                customerID: report.customer.customerID,
                 fullname: report.customer.fullname,
                 phone: report.customer.phone,
                 address: report.customer.address,
