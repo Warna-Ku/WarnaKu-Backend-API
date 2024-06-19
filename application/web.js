@@ -10,11 +10,13 @@ web.use(userRouter);
 web.use((err, req, res, next) => {
     if (err instanceof ResponseError) {
         res.status(err.status).json({
-            error: err.message
+            error: true,
+            message: err.message
         });
     } else {
         res.status(500).json({
-            error: "Internal Server Error"
+            error: true,
+            message: "Internal Server Error"
         });
     }
 });
