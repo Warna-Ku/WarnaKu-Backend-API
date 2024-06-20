@@ -32,21 +32,18 @@ Please go to Google Cloud Console and create a service account with permissions 
 ## Recap Endpoint Routes
 | Route                           | HTTP Method | Description                                  |
 |---------------------------------|-------------|----------------------------------------------|
-| /users                         | POST        | Sign up a new user       ✅                    |
-| /users/login                         | POST        | Sign in a user                    ✅           |
-| /users/update                         | PATCH        | Update current user by UID                    ✅           |
-| /users/logout                        | DELETE        | Sign out a user                ✅              |
-| /users                          | GET         | Get all users ✅                               |
-| /users/:uid                     | GET         | Get specific user by UID       ✅                       | 
-| /customers                     | POST         | Create customer data       ✅                       | 
-| /customers/update                     | PATCH         | Update certain customer's data (partial data)       ✅                       | 
-| /customers                     | GET         | Get all customers       ✅                       | 
-| /customers/:customerID                    | GET         | Get specific customer by customerID      ✅                       | 
-
-| /users/:uid/profile-picture         | PUT        | Upload a profile picture for a user           |
-| /analysis                        | POST        | Perform a prediction using an uploaded image  |
-| /records                        | GET         | Get all Analysis Records articles                             |
-| /records/:uid                   | GET         | Get an Analysis Record by UID                         |
+| /users                         | POST        | Sign up a new user                           |
+| /users/login                         | POST        | Sign in a user                               |
+| /users/update                         | PATCH        | Update current user by UID                               |
+| /users/logout                        | DELETE        | Sign out a user                             |
+| /users                          | GET         | Get all users                                |
+| /users/:uid                     | GET         | Get specific user by UID                              | 
+| /customers                     | POST         | Create customer data                              | 
+| /customers/update                     | PATCH         | Update certain customer's data (partial data)                              | 
+| /customers                     | GET         | Get all customers                              | 
+| /customers/:customerID                    | GET         | Get specific customer by customerID                             | 
+| /customers/history                    | POST         | Get the analysis report record based on authenticated user                             | 
+| /image-analyze                   | POST         | Analyze the customer's image face                             | 
 
 ## Endpoints
 
@@ -137,6 +134,8 @@ Update the current authenticated user's data (partial data)
 
 - Method: PATCH
 - Path: /users/update
+- Headers :
+  - Authorization : Bearer token
 - Body Parameters:
 ```json
 {
@@ -181,8 +180,10 @@ Logout the currently authenticated user.
 
 #### Request
 
-- Method: POST
+- Method: DELETE
 - Path: /users/logout
+- Headers :
+  - Authorization : Bearer token
 - Body Parameters:
 ```json
 {
@@ -223,6 +224,7 @@ This endpoint is used to retrieve a list of users.
 
 - Method: GET
 - Path: /users
+
 - Body Parameters: No parameters are required.
 
 #### Response
@@ -264,6 +266,8 @@ Error (HTTP 404):
 
 - Method: GET
 - Path: /users/:uid
+- Headers :
+  - Authorization : Bearer token
 - Route Parameters:
   - uid (string): The User ID (UID) of the user to retrieve.
 
@@ -286,7 +290,7 @@ Not Found (HTTP 404):
 ```json
 {
     "error": true,
-    "message": "User's data is not found"
+    "message": "User's is not found"
 }
 ```
 
@@ -305,6 +309,8 @@ Create a new customers data.
 #### Request
 - Method: POST
 - Path: /customers
+- Headers :
+  - Authorization : Bearer token
 - Body Parameters:
 ```json
 {
@@ -336,7 +342,7 @@ Failure (HTTP 400):
 ```json
 {
     "error": true,
-    "message": "Email's already registered"
+    "message": "The customer's already registered"
 }
 ```
 
@@ -348,6 +354,8 @@ Update certain customer's data (partial data)
 
 - Method: PATCH
 - Path: /customers/update
+- Headers :
+  - Authorization : Bearer token
 - Body Parameters:
 ```json
 {
@@ -394,6 +402,8 @@ This endpoint is used to retrieve a list of customers.
 
 - Method: GET
 - Path: /customers
+- Headers :
+  - Authorization : Bearer token
 - Body Parameters: No parameters are required.
 
 #### Response
@@ -441,6 +451,8 @@ Error (HTTP 404):
 
 - Method: GET
 - Path: /customers/:customerID
+- Headers :
+  - Authorization : Bearer token
 - Route Parameters:
   - customerID (string): The Customer ID (customerID) of the customer to retrieve.
 
@@ -466,5 +478,219 @@ Not Found (HTTP 404):
 {
     "error": true,
     "message": "Customer data is not found"
+}
+```
+
+### POST /customers/history
+
+#### Request
+- Method: POST
+- Path: /customers/history
+- Headers :
+  - Authorization : Bearer token
+- Body Parameters:
+```json
+{
+    "workerID": "b12d1e6f-a619-424e-9d5f-572af1be2fb3"
+}
+```
+#### Response
+
+Success (HTTP 200):
+```json
+{
+    "error": false,
+    "message": "Histories retrieved successfully",
+    "analysisReports": [
+        {
+            "season": "winter",
+            "createdAt": "2024-06-20T03:40:36.398Z",
+            "paletteDescription": "Palet musim dingin menghadirkan keanggunan dan kemewahan dengan warna-warna seperti biru tua, putih salju, dan merah marun. Palet ini cocok untuk pernikahan yang memancarkan keindahan dan kemegahan dalam suasana yang elegan dan dingin.",
+            "paletteImg": "https://storage.googleapis.com/warnaku-cs/assets/WinterPal.png",
+            "colors": [
+                {
+                    "name": "Royal Blue",
+                    "code": "#4169E1",
+                    "description": "Royal Blue memberikan kesan anggun dan mewah, ideal untuk gaun pengantin yang megah.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth1_RoyalBlue.jpg"
+                },
+                {
+                    "name": "Burgundy",
+                    "code": "#800020",
+                    "description": "Burgundy menambah sentuhan hangat dan mewah, cocok untuk dekorasi meja yang elegan.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth2_Burgundy.jpg"
+                },
+                {
+                    "name": "Snow White",
+                    "code": "#FFFAFA",
+                    "description": "Snow White menciptakan suasana dingin dan anggun, sempurna untuk aksen dekorasi yang mempesona.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth3_SnowWhite.jpg"
+                },
+                {
+                    "name": "Slate Gray",
+                    "code": "#708090",
+                    "description": "Slate Gray memberikan nuansa modern dan kuat, cocok untuk setelan pengantin pria yang tegas.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth4_SlateGray.jpg"
+                },
+                {
+                    "name": "Crimson Red",
+                    "code": "#DC143C",
+                    "description": "Crimson Red menambahkan elemen dramatis dan romantis, ideal untuk gaun pesta yang memukau.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth5_CrimsonRed.jpg"
+                }
+            ],
+            "customer": {
+                "customerID": 13,
+                "fullname": "Mamang",
+                "phone": "08124356367467",
+                "address": "Jalan Makmur",
+                "email": "mamang@example.com",
+                "faceImageURL": "https://storage.googleapis.com/warnaku-cs/customers/1896c263-c9db-4b8f-a3da-b846b72eb67e.jpg"
+            },
+            "worker": {
+                "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
+                "name": "Hanson Sujatmoko",
+                "email": "Hanson Sujatmoko"
+            }
+        },
+        {
+            "season": "winter",
+            "createdAt": "2024-06-20T03:38:48.300Z",
+            "paletteDescription": "Palet musim dingin menghadirkan keanggunan dan kemewahan dengan warna-warna seperti biru tua, putih salju, dan merah marun. Palet ini cocok untuk pernikahan yang memancarkan keindahan dan kemegahan dalam suasana yang elegan dan dingin.",
+            "paletteImg": "https://storage.googleapis.com/warnaku-cs/assets/WinterPal.png",
+            "colors": [
+                {
+                    "name": "Royal Blue",
+                    "code": "#4169E1",
+                    "description": "Royal Blue memberikan kesan anggun dan mewah, ideal untuk gaun pengantin yang megah.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth1_RoyalBlue.jpg"
+                },
+                {
+                    "name": "Burgundy",
+                    "code": "#800020",
+                    "description": "Burgundy menambah sentuhan hangat dan mewah, cocok untuk dekorasi meja yang elegan.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth2_Burgundy.jpg"
+                },
+                {
+                    "name": "Snow White",
+                    "code": "#FFFAFA",
+                    "description": "Snow White menciptakan suasana dingin dan anggun, sempurna untuk aksen dekorasi yang mempesona.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth3_SnowWhite.jpg"
+                },
+                {
+                    "name": "Slate Gray",
+                    "code": "#708090",
+                    "description": "Slate Gray memberikan nuansa modern dan kuat, cocok untuk setelan pengantin pria yang tegas.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth4_SlateGray.jpg"
+                },
+                {
+                    "name": "Crimson Red",
+                    "code": "#DC143C",
+                    "description": "Crimson Red menambahkan elemen dramatis dan romantis, ideal untuk gaun pesta yang memukau.",
+                    "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth5_CrimsonRed.jpg"
+                }
+            ],
+            "customer": {
+                "customerID": 13,
+                "fullname": "Mamang",
+                "phone": "08124356367467",
+                "address": "Jalan Makmur",
+                "email": "mamang@example.com",
+                "faceImageURL": "https://storage.googleapis.com/warnaku-cs/customers/1896c263-c9db-4b8f-a3da-b846b72eb67e.jpg"
+            },
+            "worker": {
+                "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
+                "name": "Hanson Sujatmoko",
+                "email": "Hanson Sujatmoko"
+            }
+        }
+    ]
+}
+```
+
+Not Found (HTTP 404):
+```json
+{
+    "error": true,
+    "message": "No analysis reports found"
+}
+```
+
+### POST /image-analyze
+
+- Method: POST
+- Path: /image-analyze
+- Headers :
+  - Authorization : Bearer token
+- Req Body form-data:
+  - customerID (text): The Customer ID (customerID) of the customer that want to be analyzed.
+  - workerID (text): The authenticated user who handled that customer.
+  - image (file): The customer's face image.
+
+#### Response
+
+Success (HTTP 200):
+```json
+{
+    "error": false,
+    "message": "Image analyzed successfully",
+    "resultAnalysis": {
+        "createdAt": "2024-06-20T03:38:48.300Z",
+        "season": "winter",
+        "paletteDescription": "Palet musim dingin menghadirkan keanggunan dan kemewahan dengan warna-warna seperti biru tua, putih salju, dan merah marun. Palet ini cocok untuk pernikahan yang memancarkan keindahan dan kemegahan dalam suasana yang elegan dan dingin.",
+        "paletteImg": "https://storage.googleapis.com/warnaku-cs/assets/WinterPal.png",
+        "colors": [
+            {
+                "name": "Royal Blue",
+                "code": "#4169E1",
+                "description": "Royal Blue memberikan kesan anggun dan mewah, ideal untuk gaun pengantin yang megah.",
+                "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth1_RoyalBlue.jpg"
+            },
+            {
+                "name": "Burgundy",
+                "code": "#800020",
+                "description": "Burgundy menambah sentuhan hangat dan mewah, cocok untuk dekorasi meja yang elegan.",
+                "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth2_Burgundy.jpg"
+            },
+            {
+                "name": "Snow White",
+                "code": "#FFFAFA",
+                "description": "Snow White menciptakan suasana dingin dan anggun, sempurna untuk aksen dekorasi yang mempesona.",
+                "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth3_SnowWhite.jpg"
+            },
+            {
+                "name": "Slate Gray",
+                "code": "#708090",
+                "description": "Slate Gray memberikan nuansa modern dan kuat, cocok untuk setelan pengantin pria yang tegas.",
+                "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth4_SlateGray.jpg"
+            },
+            {
+                "name": "Crimson Red",
+                "code": "#DC143C",
+                "description": "Crimson Red menambahkan elemen dramatis dan romantis, ideal untuk gaun pesta yang memukau.",
+                "image": "https://storage.googleapis.com/warnaku-cs/attire/Winter_Cloth5_CrimsonRed.jpg"
+            }
+        ],
+        "customer": {
+            "customerID": 13,
+            "fullname": "Mamang",
+            "phone": "08124356367467",
+            "address": "Jalan Makmur",
+            "email": "mamang@example.com",
+            "faceImageURL": "https://storage.googleapis.com/warnaku-cs/customers/32648135-1493-481c-ad17-b8efee560755.jpg"
+        },
+        "worker": {
+            "uid": "b12d1e6f-a619-424e-9d5f-572af1be2fb3",
+            "name": "Hanson Sujatmoko",
+            "email": "Hanson Sujatmoko"
+        }
+    }
+}
+```
+Failure (HTTP 400):
+```json
+{
+    "error": true,
+    "message": "Customer ID is required for analysis"
 }
 ```

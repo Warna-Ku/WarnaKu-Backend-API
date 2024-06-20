@@ -180,7 +180,7 @@ const update = async (request) => {
 };
 
 const logout = async (req) => {
-    const userId = req.userId;
+    const userId = req.uid;
 
     if (!userId) {
         throw new ResponseError(400, "User ID is required for logout");

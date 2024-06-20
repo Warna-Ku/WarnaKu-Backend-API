@@ -12,7 +12,7 @@ userRouter.post('/users/login', userController.login);
 userRouter.get('/users', userController.getAll);
 
 //Prediction API
-userRouter.post('/image-analyze', multer.single('image'), (req, res, next) => {
+userRouter.post('/image-analyze', authorize, multer.single('image'), (req, res, next) => {
     imgUpload.storeToGCS(req, res, next, 'customers/');
 }, customerController.analyzeImage);
 
