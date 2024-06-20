@@ -40,7 +40,7 @@ const register = async (request) => {
     user.password = await bcrypt.hash(user.password, 10);
 
     // Upload profile photo to GCS and get public URL
-    if (!profile_photo_url) {
+    if (profile_photo_url) {
         user.faceImageURL = await uploadImageToGCS(profile_photo_url, 'users/');
     }
 
